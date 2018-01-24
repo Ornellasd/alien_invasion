@@ -40,7 +40,7 @@ def check_events(ai_settings, screen, ship, bullets):
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
-def update_screen(ai_settings, screen, ship, aliens, bullets, star):
+def update_screen(ai_settings, screen, ship, aliens, bullets, stars):
     ## update images on the screen and flip to the new screen    
 
     # redraw the screen during each pass through the loop
@@ -50,7 +50,7 @@ def update_screen(ai_settings, screen, ship, aliens, bullets, star):
     for bullet in bullets.sprites():
         bullet.draw_bullet()                  
     ##
-    star.blitme()
+    stars.draw(screen)
     ##
     ship.blitme()
     aliens.draw(screen)
@@ -107,6 +107,18 @@ def create_fleet(ai_settings, screen, ship, aliens):
         for alien_number in range(number_aliens_x):
             create_alien(ai_settings, screen, aliens, alien_number, row_number)
     
-#def create_star(screen):
+def create_stars(ai_settings, screen, stars):
+    ## create a grid of background stars
 
-#    star = Star(screen) 
+    star = Star(ai_settings, screen)
+    star_width = star.rect.width
+    available_space_x = ai_settings.screen_width - 2 * star_width
+    number_stars_x = int(available_space_x / (2 * star_width))
+
+    # create first row ofbackground stars
+    for star_number in range(number_stars_x):
+        # create a star and place it in the row
+        star = Star(ai_settings, screen)
+        star.x = star_width + 2 * star_width * star_number
+        star.rect.x = star.x
+        stars.add(star)

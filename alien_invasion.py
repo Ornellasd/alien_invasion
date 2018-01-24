@@ -18,18 +18,19 @@ def run_game():
     ship = Ship(ai_settings,screen)
     bullets = Group()
     aliens = Group()
-
+    stars = Group()
+    
     # create fleet of aliens
     gf.create_fleet(ai_settings, screen, ship, aliens)
 
-    # make background star
-    star = Star(screen)
+    # make background stars
+    gf.create_stars(ai_settings, screen, stars)
 
     # main game loop
     while True:
         gf.check_events(ai_settings, screen, ship, bullets)
         ship.update()
         gf.update_bullets(bullets)
-        gf.update_screen(ai_settings, screen, ship, aliens, bullets, star)    
+        gf.update_screen(ai_settings, screen, ship, aliens, bullets, stars)    
     
 run_game()

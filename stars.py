@@ -4,9 +4,10 @@ from pygame.sprite import Sprite
 class Star(Sprite):
 ## a class to represent background stars.
 
-    def __init__(self, screen):
+    def __init__(self, ai_settings, screen):
         super().__init__()
         self.screen = screen
+        self.ai_settings = ai_settings
 
         # load the star image and set its rect attributes
         self.image = pygame.image.load('images/scaled_star.png')
