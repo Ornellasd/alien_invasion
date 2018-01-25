@@ -3,7 +3,7 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 from stars import Star
-
+from random import randint
 
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
     # respond to keypresses
@@ -14,14 +14,14 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
     elif event.key == pygame.K_SPACE:
         fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_q:
-        sys.exit()            
-    
+        sys.exit()
+
 def fire_bullet(ai_settings, screen, ship, bullets):
     # create a new bullet and add it to bullets group
     if len(bullets) < ai_settings.bullets_allowed:
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)
-        
+
 def check_keyup_events(event, ship):
     # respond to key releases
     if event.key == pygame.K_RIGHT:
@@ -40,25 +40,23 @@ def check_events(ai_settings, screen, ship, bullets):
             check_keyup_events(event, ship)
 
 def update_screen(ai_settings, screen, ship, aliens, bullets, stars):
-    ## update images on the screen and flip to the new screen    
-
+    ## update images on the screen and flip to the new screen
     # redraw the screen during each pass through the loop
     screen.fill(ai_settings.bg_color)
 
     # redraw all bullets behind ship and aliens:
     for bullet in bullets.sprites():
-        bullet.draw_bullet()                  
+        bullet.draw_bullet()
     stars.draw(screen)
     ship.blitme()
     aliens.draw(screen)
-    
+
     # make the most recently drawn screen visible.
-    pygame.display.flip()   
+    pygame.display.flip()
 
 def update_bullets(bullets):
     ## update position of bullets and get rid of old bullets.
     # update bullet positions.
-    
     bullets.update()
 
     # get rid of bullets that have disappeared.
@@ -68,20 +66,18 @@ def update_bullets(bullets):
 
 def get_number_aliens_x(ai_settings, alien_width):
     ## determine the number of aliens that fit in a row.
-    
     available_space_x = ai_settings.screen_width - 2 * alien_width
-    number_aliens_x = int(available_space_x / (2 * alien_width)) 
-    return number_aliens_x       
+    number_aliens_x = int(available_space_x / (1.5 * alien_width))
+    return number_aliens_x
 
 def get_number_rows(ai_settings, ship_height, alien_height):
-    ## determine the number of rows of aliens that fit on the screen.
+    # determine the number of rows of aliens that fit on the screen.
     available_space_y = (ai_settings.screen_height - (3 * alien_height) - ship_height)
     number_rows = int(available_space_y / (2 * alien_height))
-    return number_rows    
+    return number_rows
 
 def create_alien(ai_settings, screen, aliens, alien_number, row_number):
-    ## create an alien and place it in the row.
-
+    # create an alien and place it in the row.
     alien = Alien(ai_settings, screen)
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number
@@ -93,7 +89,7 @@ def create_fleet(ai_settings, screen, ship, aliens):
     ## create a full fleet of aliens.
     # create an alien and find the number of aliens in a row.
     # spacing between each alien is = one alien width.
-    
+
     alien = Alien(ai_settings, screen)
     number_aliens_x = get_number_aliens_x(ai_settings, alien.rect.width)
     number_rows = get_number_rows(ai_settings, ship.rect.height, alien.rect.height)
@@ -102,7 +98,7 @@ def create_fleet(ai_settings, screen, ship, aliens):
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
             create_alien(ai_settings, screen, aliens, alien_number, row_number)
-    
+
 def get_number_stars_x(ai_settings, star_width):
     available_space_x = ai_settings.screen_width - 2 * star_width
     number_stars_x = int(available_space_x / (2 * star_width))
@@ -113,26 +109,26 @@ def get_number_star_rows(ai_settings, star_height):
     available_space_y = (ai_settings.screen_height - (3 * star_height))
     number_star_rows = int(available_space_y / (2 * star_height))
     return number_star_rows
-    
+
 def create_star(ai_settings, screen, stars, star_number, star_row_number):
     # create a star and place it in the row
+    random_number = randint(-100, 100)
     star = Star(ai_settings, screen)
-    star_width = star.rect.width
-    star.x = star_width + 2 * star_width * star_number
+    star_width = star.rect.width * random_number
+    star.x = star_width + 2 * star_width * star_number * random_number
     star.rect.x = star.x
     star.rect.y = star.rect.height + 2 * star.rect.height * star_row_number
     stars.add(star)
-    
+
 def create_stars(ai_settings, screen, stars):
     ## create a grid of background stars
-
     star = Star(ai_settings, screen)
     number_stars_x = get_number_stars_x(ai_settings, star.rect.width)
     number_star_rows = get_number_star_rows(ai_settings, star.rect.height)
 
     # create sequence of stars
     for star_row_number in range(number_star_rows):
-    
         # create first row ofbackground stars
         for star_number in range(number_stars_x):
             create_star(ai_settings, screen, stars, star_number, star_row_number)
+
